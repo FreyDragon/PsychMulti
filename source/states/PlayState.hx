@@ -100,7 +100,7 @@ class PlayState extends MusicBeatState
 	public var dadMap:Map<String, Character> = new Map<String, Character>();
 	public var gfMap:Map<String, Character> = new Map<String, Character>();
 	public var variables:Map<String, Dynamic> = new Map<String, Dynamic>();
-
+	var playerSingTimer:FlxTimer;
 	#if HSCRIPT_ALLOWED
 	public var hscriptArray:Array<HScript> = [];
 	public var instancesExclude:Array<String> = [];
@@ -1655,7 +1655,6 @@ class PlayState extends MusicBeatState
 		callOnScripts('onUpdate', [elapsed]);
 
 		super.update(elapsed);
-
 		setOnScripts('curDecStep', curDecStep);
 		setOnScripts('curDecBeat', curDecBeat);
 
@@ -1753,11 +1752,9 @@ class PlayState extends MusicBeatState
 		{
 			if(!inCutscene)
 			{
-				if(!cpuControlled)
+				if(!cpuControlled) {
 					keysCheck();
-				else
-					playerDance();
-
+				}
 				if(notes.length > 0)
 				{
 					if(startedCountdown)
@@ -2913,6 +2910,7 @@ class PlayState extends MusicBeatState
 	// Hold notes
 	private function keysCheck():Void
 	{
+
 		if (Main.instance.serverstate == "client") {
 
 		// HOLDING
@@ -2955,8 +2953,7 @@ class PlayState extends MusicBeatState
 			}
 
 			if (!holdArray.contains(true) || endingSong)
-				playerDance();
-
+				trace('nuh uh');
 			#if ACHIEVEMENTS_ALLOWED
 			else checkForAchievement(['oversinging']);
 			#end
@@ -3146,6 +3143,14 @@ class PlayState extends MusicBeatState
 			if (!note.isSustainNote) invalidateNote(note);
 		}
 		if (Main.instance.serverstate == "server") {
+			if (playerSingTimer != null) {
+				if (playerSingTimer.active) {
+					playerSingTimer.destroy();
+				}
+			}
+			playerSingTimer = new FlxTimer().start(0.2, function(tmr:FlxTimer) {
+				playerDance();
+			});
 			var result:Dynamic = callOnLuas('opponentNoteHitPre', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
 			if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('opponentNoteHitPre', [note]);
 			
@@ -3172,7 +3177,14 @@ class PlayState extends MusicBeatState
 		if (Main.instance.serverstate == "server") {
 				var char:Character = boyfriend;
 				var animToPlay:String = singAnimations[Std.int(Math.abs(Math.min(singAnimations.length-1, dir)))];
-	
+				if (playerSingTimer != null) {
+					if (playerSingTimer.active) {
+						playerSingTimer.destroy();
+					}
+				}
+				playerSingTimer = new FlxTimer().start(0.2, function(tmr:FlxTimer) {
+					playerDance();
+				});
 				if(char != null)
 				{
 					char.playAnim(animToPlay, true);
@@ -3183,9 +3195,21 @@ class PlayState extends MusicBeatState
 	}
 	public function goodNoteHit(note:Note):Void
 	{
+		if (!camZooming) {
+			camZooming = true;
+		}
 		if(note.wasGoodHit) return;
 		if(cpuControlled && note.ignoreNote) return;
-
+		if (Main.instance.serverstate == 'client') {				
+			if (playerSingTimer != null) {
+				if (playerSingTimer.active) {
+					playerSingTimer.destroy();
+				}
+			}
+			playerSingTimer = new FlxTimer().start(0.2, function(tmr:FlxTimer) {
+				playerDance();
+			});
+		}
 		var isSus:Bool = note.isSustainNote; //GET OUT OF MY HEAD, GET OUT OF MY HEAD, GET OUT OF MY HEAD
 		var leData:Int = Math.round(Math.abs(note.noteData));
 		var leType:String = note.noteType;
@@ -3216,9 +3240,11 @@ class PlayState extends MusicBeatState
 		}
 
 		if(!note.noAnimation) {
+			
 			var animToPlay:String = singAnimations[Std.int(Math.abs(Math.min(singAnimations.length-1, note.noteData)))];
 			var char:Character;
 			char = boyfriend;
+
 			if (Main.instance.serverstate == "client") {
 			char = boyfriend;
 				Main.instance.sendClientMessage(["playAnim", note.noteData]);
@@ -3227,6 +3253,7 @@ class PlayState extends MusicBeatState
 				char = dad;
 					Main.instance.sendServerMessage(["playAnim", note.noteData]);
 			}
+
 			var animCheck:String = 'hey';
 			if(note.gfNote)
 			{
@@ -3254,6 +3281,14 @@ class PlayState extends MusicBeatState
 			if (Main.instance.serverstate == "client") {
 			var spr = playerStrums.members[note.noteData];
 			if(spr != null) spr.playAnim('confirm', true);
+				if (playerSingTimer != null) {
+					if (playerSingTimer.active) {
+						playerSingTimer.destroy();
+					}
+				}
+				playerSingTimer = new FlxTimer().start(0.2, function(tmr:FlxTimer) {
+					playerDance();
+				});
 			}
 			if (Main.instance.serverstate == "server") {
 				var spr = opponentStrums.members[note.noteData];
@@ -3403,11 +3438,9 @@ class PlayState extends MusicBeatState
 			dad.dance();
 	}
 
-	public function playerDance():Void
+	public function playerDance()
 	{
-		if (boyfriend.holdTimer <= 0.1) {
-			boyfriend.dance();
-		}
+		boyfriend.dance();
 	}
 
 	override function sectionHit()
