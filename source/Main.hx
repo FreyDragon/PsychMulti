@@ -2,6 +2,7 @@ package;
 
 import states.ConnectionState;
 import states.PlayState;
+import states.ScoreOverviewState;
 import states.OutdatedState;
 #if android
 import android.content.Context;
@@ -47,6 +48,8 @@ class Main extends Sprite
 	static public var instance:Main;
 	var server:Dynamic;
 	var client:Dynamic;
+	public var scoresArray:Dynamic;
+	public var otherScoresArray:Dynamic;
 	public var freyVersion:Dynamic;
 	public var newFreyVersion:Dynamic;
 	public var serverstate = "none";
@@ -72,7 +75,7 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-		freyVersion = "0.0.1";
+		freyVersion = "0.0.2";
 		Main.instance = this;
 		// Credits to MAJigsaw77 (he's the og author for this code)
 		#if android
@@ -191,11 +194,23 @@ class Main extends Sprite
 				case "playAnim":
 					PlayState.instance.opponentNoteTrigger(e.data.message[1]);
 				case "playerScore":
-					
+					otherScoresArray = [e.data.message[1], e.data.message[2]];
+					sendServerMessage(["playerScore", scoresArray]);
+				case "BRO HES DEAD":
+					PlayState.instance.endSong();
 				default:
 					trace('unknown prompt '+ e.data.message[0]);
 			}
 		  });
+	}
+	public function initCalcScore() {
+		if (ScoreOverviewState.instance != null) {
+			if (serverstate == "client") {
+				ScoreOverviewState.instance.calculateRankings(otherScoresArray[0], otherScoresArray[1], scoresArray[0], scoresArray[1]);
+			} else {
+				ScoreOverviewState.instance.calculateRankings(scoresArray[0], scoresArray[1], otherScoresArray[0], otherScoresArray[1]);
+			}
+		}
 	}
 	public function sendServerMessage(messages:Dynamic) {
 		server.send({ message: messages, verb: 'test' });
@@ -220,7 +235,7 @@ class Main extends Sprite
 				case "playAnim":
 					PlayState.instance.opponentNoteTrigger(e.data.message[1]);
 				case "playerScore":
-					
+					otherScoresArray = [e.data.message[1], e.data.message[2]];
 				case 'version':
 					if (e.data.message[1] != freyVersion) {
 						client = null;

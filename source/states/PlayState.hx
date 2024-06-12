@@ -6,7 +6,7 @@ import backend.WeekData;
 import backend.Song;
 import backend.Section;
 import backend.Rating;
-
+import states.ScoreOverviewState;
 import flixel.FlxBasic;
 import flixel.FlxObject;
 import flixel.FlxSubState;
@@ -2432,11 +2432,15 @@ class PlayState extends MusicBeatState
 			}
 			else
 			{
+				Main.instance.scoresArray = [songScore, ratingPercent];
+				if (Main.instance.serverstate == "client") {
+					Main.instance.sendClientMessage(["playerScore", songScore, ratingPercent]);
+				}
 				trace('WENT BACK TO FREEPLAY??');
 				Mods.loadTopMod();
 				#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 
-				MusicBeatState.switchState(new FreeplayState());
+				MusicBeatState.switchState(new ScoreOverviewState());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				changedDifficulty = false;
 			}
@@ -2444,7 +2448,6 @@ class PlayState extends MusicBeatState
 		}
 		return true;
 	}
-
 	public function KillNotes() {
 		while(notes.length > 0) {
 			var daNote:Note = notes.members[0];
