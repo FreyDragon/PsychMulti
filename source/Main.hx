@@ -2,6 +2,7 @@ package;
 
 import states.ConnectionState;
 import states.PlayState;
+import states.OutdatedState;
 #if android
 import android.content.Context;
 #end
@@ -46,7 +47,8 @@ class Main extends Sprite
 	static public var instance:Main;
 	var server:Dynamic;
 	var client:Dynamic;
-	var freyVersion:Dynamic;
+	public var freyVersion:Dynamic;
+	public var newFreyVersion:Dynamic;
 	public var serverstate = "none";
 	var game = {
 		width: 1280, // WINDOW width
@@ -222,6 +224,8 @@ class Main extends Sprite
 				case 'version':
 					if (e.data.message[1] != freyVersion) {
 						client = null;
+						newFreyVersion = e.data.message[1];
+						FlxG.switchState(new OutdatedState());
 					}
 				case "sync":
 				 PlayState.instance.forceTime(e.data.message[1]);
