@@ -250,7 +250,7 @@ class Main extends Sprite
 				case "BRO HES DEAD":
 					PlayState.instance.endSong();
 				case "getRating":
-					var dharmann:Rating = e.data.message[2];
+					var dharmann = e.data.message[2];
 					PlayState.instance.popupOpponentScore(dharmann, e.data.message[1]);
 				case "loadNewSong":
 					PlayState.SONG = Song.loadFromJson(e.data.message[1], e.data.message[2]);

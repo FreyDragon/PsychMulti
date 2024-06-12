@@ -2490,7 +2490,7 @@ class PlayState extends MusicBeatState
 		for (i in 0...10)
 			Paths.image(uiPrefix + 'num' + i + uiSuffix);
 	}
-	public function popupOpponentScore(daRating:Rating, overallScore:Int = 0) {
+	public function popupOpponentScore(daRating:Dynamic, overallScore:Int = 0) {
 		opponentSongScore = overallScore;
 		if (!ClientPrefs.data.comboStacking && comboGroup.members.length > 0) {
 			for (spr in comboGroup) {
@@ -2515,13 +2515,14 @@ class PlayState extends MusicBeatState
 			antialias = !isPixelStage;
 		}
 
-		rating.loadGraphic(Paths.image(uiPrefix + daRating.image + uiSuffix));
+		rating.loadGraphic(Paths.image(daRating));
 		rating.screenCenter();
 		rating.x = placement + 300;
 		rating.y -= 60;
 		rating.acceleration.y = 550 * playbackRate * playbackRate;
 		rating.velocity.y -= FlxG.random.int(140, 175) * playbackRate;
 		rating.velocity.x -= FlxG.random.int(0, 10) * playbackRate;
+		add(rating);
 		rating.visible = (!ClientPrefs.data.hideHud && showRating);
 		rating.x += ClientPrefs.data.comboOffset[0];
 		rating.y -= ClientPrefs.data.comboOffset[1];
@@ -2597,6 +2598,7 @@ class PlayState extends MusicBeatState
 		}
 
 		rating.loadGraphic(Paths.image(uiPrefix + daRating.image + uiSuffix));
+		trace("" + uiPrefix + daRating.image + uiSuffix + "");
 		rating.screenCenter();
 		rating.x = placement - 40;
 		rating.y -= 60;
@@ -2695,10 +2697,10 @@ class PlayState extends MusicBeatState
 			startDelay: Conductor.crochet * 0.002 / playbackRate
 		});
 		if (Main.instance.serverstate == "client") {
-				Main.instance.sendClientMessage(["getRating", songScore, daRating]);
+				Main.instance.sendClientMessage(["getRating", songScore, (uiPrefix + daRating.image + uiSuffix)]);
 			}
 			if (Main.instance.serverstate == "server") {
-					Main.instance.sendServerMessage(["getRating", songScore, daRating]);
+					Main.instance.sendServerMessage(["getRating", songScore, (uiPrefix + daRating.image + uiSuffix)]);
 			}
 	}
 
