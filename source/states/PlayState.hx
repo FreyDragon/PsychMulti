@@ -3405,7 +3405,9 @@ class PlayState extends MusicBeatState
 
 	public function playerDance():Void
 	{
-		
+		if (boyfriend.holdTimer <= 0.1) {
+			boyfriend.dance();
+		}
 	}
 
 	override function sectionHit()
