@@ -7,7 +7,7 @@ import states.OutdatedState;
 #if android
 import android.content.Context;
 #end
-
+import backend.Rating;
 import debug.FPSCounter;
 import networking.Network;
 import networking.sessions.Session;
@@ -75,7 +75,7 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-		freyVersion = "0.0.2";
+		freyVersion = "0.0.3";
 		Main.instance = this;
 		// Credits to MAJigsaw77 (he's the og author for this code)
 		#if android
@@ -193,6 +193,9 @@ class Main extends Sprite
 					}
 				case "playAnim":
 					PlayState.instance.opponentNoteTrigger(e.data.message[1]);
+				case "getRating":
+					var dharmann:Rating = e.data.message[2];
+					PlayState.instance.popupOpponentScore(dharmann, e.data.message[1]);
 				case "playerScore":
 					otherScoresArray = [e.data.message[1], e.data.message[2]];
 					sendServerMessage(["playerScore", scoresArray]);
@@ -246,6 +249,9 @@ class Main extends Sprite
 				 PlayState.instance.forceTime(e.data.message[1]);
 				case "BRO HES DEAD":
 					PlayState.instance.endSong();
+				case "getRating":
+					var dharmann:Rating = e.data.message[2];
+					PlayState.instance.popupOpponentScore(dharmann, e.data.message[1]);
 				case "loadNewSong":
 					PlayState.SONG = Song.loadFromJson(e.data.message[1], e.data.message[2]);
 					PlayState.isStoryMode = false;
