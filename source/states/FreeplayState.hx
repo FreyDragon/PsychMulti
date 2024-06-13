@@ -197,6 +197,14 @@ class FreeplayState extends MusicBeatState
 	var holdTime:Float = 0;
 	override function update(elapsed:Float)
 	{
+		if (Main.instance.serverstate == 'client') {
+			if (controls.BACK)
+			{
+				FlxG.sound.play(Paths.sound('cancelMenu'));
+				Main.instance.goHome();
+				MusicBeatState.switchState(new ConnectionState());
+			}
+		}
 		if (Main.instance.serverstate == 'server') {
 		if (FlxG.sound.music.volume < 0.7)
 		{
@@ -303,7 +311,8 @@ class FreeplayState extends MusicBeatState
 					colorTween.cancel();
 				}
 				FlxG.sound.play(Paths.sound('cancelMenu'));
-				MusicBeatState.switchState(new MainMenuState());
+				Main.instance.goHome();
+				MusicBeatState.switchState(new ConnectionState());
 			}
 		}
 

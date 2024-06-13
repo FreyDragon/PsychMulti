@@ -1,6 +1,7 @@
 package states;
 import flixel.ui.FlxButton;
 import states.TitleState;
+import states.FreeplayState;
 class ScoreOverviewState extends MusicBeatState
 {
     var scoreComparison:FlxText;
@@ -14,7 +15,7 @@ class ScoreOverviewState extends MusicBeatState
             Main.instance.initCalcScore();
             new FlxTimer().start(5, function(tmr:FlxTimer)
 				{
-					MusicBeatState.switchState(new TitleState());
+					MusicBeatState.switchState(new FreeplayState());
 				});
         }
     public function calculateRankings(p1score:Int = 0, p1acc:Float = 0.0, p3score:Int = 0, p3acc:Float = 0.0) {

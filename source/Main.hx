@@ -75,7 +75,7 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-		freyVersion = "0.0.4.1";
+		freyVersion = "0.0.5";
 		Main.instance = this;
 		// Credits to MAJigsaw77 (he's the og author for this code)
 		#if android
@@ -171,6 +171,11 @@ class Main extends Sprite
 		        sprite.__cacheBitmap = null;
 			sprite.__cacheBitmapData = null;
 		}
+	}
+	public function goHome() {
+		serverstate = "none";
+		server = null;
+		client = null;
 	}
 	public function startServer(ports:Int = 8888) {
 		serverstate = "server";
