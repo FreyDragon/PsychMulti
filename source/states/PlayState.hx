@@ -615,8 +615,19 @@ class PlayState extends MusicBeatState
 				#end
 			}
 		#end
-
-		startCallback();
+		Main.instance.readytostart = true;
+		if (Main.instance.serverstate == "server" ) {
+			new FlxTimer().start(2.5, function(tmr:FlxTimer)
+			{
+				Main.instance.sendServerMessage(["ready"]);
+			});
+		} else {
+			new FlxTimer().start(2.5, function(tmr:FlxTimer)
+			{
+				Main.instance.sendClientMessage(["ready"]);
+			});
+		}
+		
 		RecalculateRating();
 
 		FlxG.stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyPress);
@@ -659,6 +670,11 @@ class PlayState extends MusicBeatState
 		songSpeed = value;
 		noteKillOffset = Math.max(Conductor.stepCrochet, 350 / songSpeed * playbackRate);
 		return value;
+	}
+	public function syncStart(){
+
+				startCallback();
+
 	}
 
 	function set_playbackRate(value:Float):Float

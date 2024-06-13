@@ -12,20 +12,25 @@ class ScoreOverviewState extends MusicBeatState
         {
             instance = this;
             super.create();
-            Main.instance.initCalcScore();
-            new FlxTimer().start(5, function(tmr:FlxTimer)
+            new FlxTimer().start(1.5, function(tmr:FlxTimer)
+				{
+                    //timer so game has time to not crash!
+                    Main.instance.initCalcScore();
+				});
+            new FlxTimer().start(10, function(tmr:FlxTimer)
 				{
 					MusicBeatState.switchState(new FreeplayState());
 				});
         }
-    public function calculateRankings(p1score:Int = 0, p1acc:Float = 0.0, p3score:Int = 0, p3acc:Float = 0.0) {
+    public function calculateRankings(p1score:Dynamic = 0, p1acc:Dynamic = 0.0, p3score:Dynamic = 0, p3acc:Dynamic = 0.0) {
+        if (p1score != null && p1acc != null && p3score != null && p3acc != null) {
         var scoreComparisontext = "hi";
         var accComparisontext = "hi";
         var overallComparisontext = "hi";
         var accWinner = -1;
         var scoreWinner = -1;
-        var p2score:Int = 0;
-        var p2acc:Float = 0.0;
+        var p2score:Dynamic = 0;
+        var p2acc:Dynamic = 0.0;
         if (Main.instance.serverstate == 'server') {
             p2acc = p3acc;
             p2score = p3score;
@@ -89,6 +94,10 @@ class ScoreOverviewState extends MusicBeatState
         add(accComparison);
         scoreComparison = new FlxText(100, 400, 0, scoreComparisontext, 30);
         add(scoreComparison);
+        } else {
+            overallComparison = new FlxText(100, 100, 0, "Score cannot be compared\nNull object almost crashed game!", 30);
+            add(overallComparison);
+        }
     }
 	override function update(elapsed:Float)
         {

@@ -52,6 +52,8 @@ class Main extends Sprite
 	public var otherScoresArray:Dynamic;
 	public var freyVersion:Dynamic;
 	public var newFreyVersion:Dynamic;
+	var coolTimer:FlxTimer;
+	public var readytostart = false;
 	public var serverstate = "none";
 	var game = {
 		width: 1280, // WINDOW width
@@ -192,6 +194,14 @@ class Main extends Sprite
 		  server.addEventListener(NetworkEvent.MESSAGE_RECEIVED, function(e: NetworkEvent) {
 			trace(e.data.message); // Welcome to the server!
 			switch(e.data.message[0]) {
+				case "ready":
+					coolTimer = new FlxTimer().start(0.005, function(tmr:FlxTimer)
+						{
+							if(readytostart) {
+								PlayState.instance.syncStart();
+								coolTimer.cancel();
+							}
+						}, 0);
 				case "setHealth":
 					if (PlayState.instance.health >= e.data.message[1] + 0.05) {
 						PlayState.instance.health -= e.data.message[1];
@@ -236,6 +246,14 @@ class Main extends Sprite
 		  client.addEventListener(NetworkEvent.MESSAGE_RECEIVED, function(e: NetworkEvent) {
 			trace(e.data.message); // Welcome to the server!
 			switch(e.data.message[0]) {
+				case "ready":
+					coolTimer = new FlxTimer().start(0.005, function(tmr:FlxTimer)
+						{
+							if(readytostart) {
+								PlayState.instance.syncStart();
+								coolTimer.cancel();
+							}
+						}, 0);
 				case "setHealth":
 					if (PlayState.instance.health >= e.data.message[1] + 0.05) {
 						PlayState.instance.health -= e.data.message[1];
