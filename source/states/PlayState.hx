@@ -1843,7 +1843,7 @@ class PlayState extends MusicBeatState
 									invalidateNote(daNote);
 								}
 								}
-								if (ClientPrefs.data.lowQuality && strumGroup == opponentStrums) {
+								if (ClientPrefs.data.lowQuality && strumGroup == playerStrums) {
 									daNote.destroy();
 								}
 							}
