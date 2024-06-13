@@ -1023,15 +1023,18 @@ class PlayState extends MusicBeatState
 				}
 
 				notes.forEachAlive(function(note:Note) {
-					if(ClientPrefs.data.opponentStrums && !ClientPrefs.data.lowQuality || (note.mustPress && Main.instance.serverstate == "client") || (!note.mustPress && Main.instance.serverstate == "server"))
+					if((!ClientPrefs.data.lowQuality) && ClientPrefs.data.opponentStrums || ((note.mustPress && Main.instance.serverstate == "client") || (!note.mustPress && Main.instance.serverstate == "server")))
 					{
 						note.copyAlpha = false;
 						note.alpha = note.multAlpha;
 						if(ClientPrefs.data.middleScroll && !note.mustPress)
 							note.alpha *= 0.35;
-					} else {
-						note.alpha = 0;
-					}
+					} 
+					if (ClientPrefs.data.lowQuality && !((note.mustPress && Main.instance.serverstate == "client") || (!note.mustPress && Main.instance.serverstate == "server")))
+						{
+							note.alpha = 0.0;
+							note.multAlpha == 0.0;
+						}
 				});
 
 				stagesFunc(function(stage:BaseStage) stage.countdownTick(tick, swagCounter));
@@ -1777,39 +1780,46 @@ class PlayState extends MusicBeatState
 						if (Main.instance.serverstate == "client") {
 							notes.forEachAlive(function(daNote:Note)
 							{
-								var strumGroup:FlxTypedGroup<StrumNote> = playerStrums;
-								if(!daNote.mustPress) strumGroup = opponentStrums;
+								if (daNote != null) {
+									var strumGroup:FlxTypedGroup<StrumNote> = playerStrums;
+									if(!daNote.mustPress) strumGroup = opponentStrums;
+									if (daNote != null) {
+									var strum:StrumNote = strumGroup.members[daNote.noteData];
+									daNote.followStrumNote(strum, fakeCrochet, songSpeed / playbackRate);
 
-								var strum:StrumNote = strumGroup.members[daNote.noteData];
-								daNote.followStrumNote(strum, fakeCrochet, songSpeed / playbackRate);
+									if(daNote.mustPress)
+									{
+										if(cpuControlled && !daNote.blockHit && daNote.canBeHit && (daNote.isSustainNote || daNote.strumTime <= Conductor.songPosition))
+											goodNoteHit(daNote);
+									}
+									else if (daNote.wasGoodHit && !daNote.hitByOpponent && !daNote.ignoreNote)
+										opponentNoteHit(daNote);
 
-								if(daNote.mustPress)
-								{
-									if(cpuControlled && !daNote.blockHit && daNote.canBeHit && (daNote.isSustainNote || daNote.strumTime <= Conductor.songPosition))
-										goodNoteHit(daNote);
-								}
-								else if (daNote.wasGoodHit && !daNote.hitByOpponent && !daNote.ignoreNote)
-									opponentNoteHit(daNote);
+									if(daNote.isSustainNote && strum.sustainReduce) daNote.clipToStrumNote(strum);
 
-								if(daNote.isSustainNote && strum.sustainReduce) daNote.clipToStrumNote(strum);
+									// Kill extremely late notes and cause misses
+									if (Conductor.songPosition - daNote.strumTime > noteKillOffset)
+									{
+										if (daNote.mustPress && !cpuControlled && !daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit))
+											noteMiss(daNote);
 
-								// Kill extremely late notes and cause misses
-								if (Conductor.songPosition - daNote.strumTime > noteKillOffset)
-								{
-									if (daNote.mustPress && !cpuControlled && !daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit))
-										noteMiss(daNote);
-
-									daNote.active = daNote.visible = false;
-									invalidateNote(daNote);
+										daNote.active = daNote.visible = false;
+										invalidateNote(daNote);
+									}
+									}
+									if (ClientPrefs.data.lowQuality && strumGroup == opponentStrums) {
+										daNote.destroy();
+									}
 								}
 							});
 						}
 						if (Main.instance.serverstate == "server") {
 							notes.forEachAlive(function(daNote:Note)
 							{
+								if (daNote != null) {
 								var strumGroup:FlxTypedGroup<StrumNote> = opponentStrums;
 								if(daNote.mustPress) strumGroup = playerStrums;
-
+								if (daNote != null) {
 								var strum:StrumNote = strumGroup.members[daNote.noteData];
 								daNote.followStrumNote(strum, fakeCrochet, songSpeed / playbackRate);
 
@@ -1832,6 +1842,11 @@ class PlayState extends MusicBeatState
 									daNote.active = daNote.visible = false;
 									invalidateNote(daNote);
 								}
+								}
+								if (ClientPrefs.data.lowQuality && strumGroup == opponentStrums) {
+									daNote.destroy();
+								}
+							}
 							});
 						}	
 					}
@@ -1839,8 +1854,10 @@ class PlayState extends MusicBeatState
 					{
 						notes.forEachAlive(function(daNote:Note)
 						{
+							if (daNote != null) {
 							daNote.canBeHit = false;
 							daNote.wasGoodHit = false;
+							}
 						});
 					}
 				}
@@ -3143,6 +3160,7 @@ class PlayState extends MusicBeatState
 
 	function opponentNoteHit(note:Note):Void
 	{
+		if (!ClientPrefs.data.lowQuality) {
 		if (Main.instance.serverstate == "client") {
 			var result:Dynamic = callOnLuas('opponentNoteHitPre', [notes.members.indexOf(note), Math.abs(note.noteData), note.noteType, note.isSustainNote]);
 			if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('opponentNoteHitPre', [note]);
@@ -3176,6 +3194,7 @@ class PlayState extends MusicBeatState
 			if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('opponentNoteHit', [note]);
 	
 			if (!note.isSustainNote) invalidateNote(note);
+		}
 		}
 	}
 	public function opponentNoteTrigger(dir:Int = 0) {
