@@ -17,12 +17,23 @@ class ScoreOverviewState extends MusicBeatState
 					MusicBeatState.switchState(new TitleState());
 				});
         }
-    public function calculateRankings(p1score:Int = 0, p1acc:Float = 0.0, p2score:Int = 0, p2acc:Float = 0.0) {
+    public function calculateRankings(p1score:Int = 0, p1acc:Float = 0.0, p3score:Int = 0, p3acc:Float = 0.0) {
         var scoreComparisontext = "hi";
         var accComparisontext = "hi";
         var overallComparisontext = "hi";
         var accWinner = -1;
         var scoreWinner = -1;
+        var p2score:Int = 0;
+        var p2acc:Float = 0.0;
+        if (Main.instance.serverstate == 'server') {
+            p2acc = p3acc;
+            p2score = p3score;
+        } else {
+            p2acc = p1acc;
+            p2score = p1score;
+            p1acc = p3acc;
+            p1score = p3score;
+        }
         if (p1score == p2score) {
             scoreComparisontext = "Opponent tied with Boyfriend for a score of " + p1score + "!";
         } else if (p1score >= p2score) {
@@ -57,17 +68,17 @@ class ScoreOverviewState extends MusicBeatState
         opponentWinsArray.push(scoreWinner == 1);
         switch(opponentWinsArray) {
             case [true, true, true]:
-                overallComparisontext = "Opponent wins in a landslide! \nOpponent had a higher accuracy of " + p1acc + "\nAND a higher score of " + p1score + "!";
+                overallComparisontext = "Opponent wins in a landslide! \nOpponent had a higher accuracy of " + p1acc * 100 + "%\nAND a higher score of " + p1score + "!";
             case [true, true, false]:
-                overallComparisontext = "Opponent wins! \nOpponent had a higher accuracy of " + p1acc + "\nbut a lower score of " + p1score + "!";
+                overallComparisontext = "Opponent wins! \nOpponent had a higher accuracy of " + p1acc * 100 + "%\nbut a lower score of " + p1score + "!";
             case [true, false, true]:
-                overallComparisontext = "Opponent wins! \nOpponent had a higher score of " + p1score + "\nbut a lower accuracy of " + p1acc + "!";
+                overallComparisontext = "Opponent wins! \nOpponent had a higher score of " + p1score + "\nbut a lower accuracy of " + p1acc * 100 + "%!";
             case [false, false, false]:
-                overallComparisontext = "Boyfriend wins in a landslide! \nBoyfriend had a higher accuracy of " + p2acc + "\nAND a higher score of " + p2score + "!";
+                overallComparisontext = "Boyfriend wins in a landslide! \nBoyfriend had a higher accuracy of " + p2acc * 100 + "%\nAND a higher score of " + p2score + "!";
             case [false, true, false]:
-                overallComparisontext = "Boyfriend wins! \nBoyfriend had a higher accuracy of " + p2acc + "\nbut a lower score of " + p2score + "!";
+                overallComparisontext = "Boyfriend wins! \nBoyfriend had a higher accuracy of " + p2acc * 100 + "%\nbut a lower score of " + p2score + "!";
             case [false, false, true]:
-                overallComparisontext = "Boyfriend wins! \nBoyfriend had a higher score of " + p2score + "\nbut a lower accuracy of " + p2acc + "!";
+                overallComparisontext = "Boyfriend wins! \nBoyfriend had a higher score of " + p2score + "\nbut a lower accuracy of " + p2acc * 100 + "%!";
             default:
                 overallComparisontext = "Something seems to be wrong, \nOR there is a tie\nDid opponent win? \nDid opponent score more?" + opponentWinsArray[2] + "\ndid opponent have more accuracy?" + opponentWinsArray[1] + "\nIF THERE SHOULD BE A WINNER, \nreport this to the mod's \n issue tracker!!!!! \n https://github.com/FreyDragon/PsychMulti/issues";
         }

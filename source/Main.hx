@@ -75,7 +75,7 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-		freyVersion = "0.0.4";
+		freyVersion = "0.0.4.0";
 		Main.instance = this;
 		// Credits to MAJigsaw77 (he's the og author for this code)
 		#if android
