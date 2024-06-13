@@ -1753,8 +1753,7 @@ class PlayState extends MusicBeatState
 		// RESET = Quick Game Over Screen
 		if (!ClientPrefs.data.noReset && controls.RESET && canReset && !inCutscene && startedCountdown && !endingSong)
 		{
-			health = 0;
-			trace("RESET = True");
+		
 		}
 		doDeathCheck();
 
@@ -2023,9 +2022,9 @@ class PlayState extends MusicBeatState
 				modchartTweens.clear();
 				#end
 
-				openSubState(new GameOverSubstate());
+				
 
-				// MusicBeatState.switchState(new GameOverState(boyfriend.getScreenPosition().x, boyfriend.getScreenPosition().y));
+				MusicBeatState.switchState(new ScoreOverviewState());
 
 				#if DISCORD_ALLOWED
 				// Game Over doesn't get his its variable because it's only used here
@@ -2383,20 +2382,7 @@ class PlayState extends MusicBeatState
 	{
 		//Should kill you if you tried to cheat
 		if(!startingSong) {
-			notes.forEach(function(daNote:Note) {
-				if(daNote.strumTime < songLength - Conductor.safeZoneOffset) {
-					health -= 0.05 * healthLoss;
-				}
-			});
-			for (daNote in unspawnNotes) {
-				if(daNote.strumTime < songLength - Conductor.safeZoneOffset) {
-					health -= 0.05 * healthLoss;
-				}
-			}
-
-			if(doDeathCheck()) {
-				return false;
-			}
+			
 		}
 
 		timeBar.visible = false;
