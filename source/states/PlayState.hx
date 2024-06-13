@@ -379,7 +379,7 @@ class PlayState extends MusicBeatState
 		boyfriendGroup = new FlxSpriteGroup(BF_X, BF_Y);
 		dadGroup = new FlxSpriteGroup(DAD_X, DAD_Y);
 		gfGroup = new FlxSpriteGroup(GF_X, GF_Y);
-
+		if (!ClientPrefs.data.lowQuality) {
 		switch (curStage)
 		{
 			case 'stage': new states.stages.StageWeek1(); //Week 1
@@ -392,15 +392,15 @@ class PlayState extends MusicBeatState
 			case 'schoolEvil': new states.stages.SchoolEvil(); //Week 6 - Thorns
 			case 'tank': new states.stages.Tank(); //Week 7 - Ugh, Guns, Stress
 		}
-
+		}
 		if(isPixelStage) {
 			introSoundsSuffix = '-pixel';
 		}
-
+		if (!ClientPrefs.data.lowQuality) {
 		add(gfGroup);
 		add(dadGroup);
 		add(boyfriendGroup);
-
+		}
 		#if (LUA_ALLOWED || HSCRIPT_ALLOWED)
 		luaDebugGroup = new FlxTypedGroup<psychlua.DebugLuaText>();
 		luaDebugGroup.cameras = [camOther];
@@ -439,7 +439,9 @@ class PlayState extends MusicBeatState
 			gf = new Character(0, 0, SONG.gfVersion);
 			startCharacterPos(gf);
 			gf.scrollFactor.set(0.95, 0.95);
+			if (!ClientPrefs.data.lowQuality) {
 			gfGroup.add(gf);
+			}
 			startCharacterScripts(gf.curCharacter);
 		}
 
@@ -1021,12 +1023,14 @@ class PlayState extends MusicBeatState
 				}
 
 				notes.forEachAlive(function(note:Note) {
-					if(ClientPrefs.data.opponentStrums || note.mustPress)
+					if(ClientPrefs.data.opponentStrums && !ClientPrefs.data.lowQuality || (note.mustPress && Main.instance.serverstate == "client") || (!note.mustPress && Main.instance.serverstate == "server"))
 					{
 						note.copyAlpha = false;
 						note.alpha = note.multAlpha;
 						if(ClientPrefs.data.middleScroll && !note.mustPress)
 							note.alpha *= 0.35;
+					} else {
+						note.alpha = 0;
 					}
 				});
 
@@ -1492,10 +1496,19 @@ class PlayState extends MusicBeatState
 			// FlxG.log.add(i);
 			var targetAlpha:Float = 1;
 			if (player < 1)
-			{
-				if(!ClientPrefs.data.opponentStrums) targetAlpha = 0;
-				else if(ClientPrefs.data.middleScroll) targetAlpha = 0.35;
-			}
+				{
+					if (Main.instance.serverstate == "client") {
+						if(!ClientPrefs.data.opponentStrums) targetAlpha = 0;
+						else if(ClientPrefs.data.middleScroll) targetAlpha = 0.35;
+					}
+				}
+			if (player == 1)
+				{
+					if (Main.instance.serverstate == "server") {
+						if(!ClientPrefs.data.opponentStrums) targetAlpha = 0;
+						else if(ClientPrefs.data.middleScroll) targetAlpha = 0.35;
+					}
+				}
 
 			var babyArrow:StrumNote = new StrumNote(strumLineX, strumLineY, i, player);
 			babyArrow.downScroll = ClientPrefs.data.downScroll;
@@ -1521,8 +1534,9 @@ class PlayState extends MusicBeatState
 				}
 				opponentStrums.add(babyArrow);
 			}
-
-			strumLineNotes.add(babyArrow);
+			if (!ClientPrefs.data.lowQuality || (Main.instance.serverstate == "client" && player == 1) || (Main.instance.serverstate == "server" && player < 1)) {
+				strumLineNotes.add(babyArrow);
+			}
 			babyArrow.postAddedToGroup();
 		}
 	}
