@@ -20,6 +20,7 @@ import shaders.ColorSwap;
 import states.StoryMenuState;
 import states.OutdatedState;
 import states.MainMenuState;
+import states.ConnectionState;
 
 typedef TitleData =
 {
@@ -418,7 +419,7 @@ class TitleState extends MusicBeatState
 					if (mustUpdate) {
 						MusicBeatState.switchState(new OutdatedState());
 					} else {
-						MusicBeatState.switchState(new MainMenuState());
+						MusicBeatState.switchState(new ConnectionState());
 					}
 					closedState = true;
 				});

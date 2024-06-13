@@ -12,7 +12,8 @@ class ConnectionState extends FlxState {
 
     override public function new() {
         super();
-
+        FlxG.mouse.enabled = true;
+        FlxG.mouse.visible = true;
         FlxG.autoPause = false;
         coolServerButton = new FlxButton(100, 300, "Start Server", clickServer);
         coolClientButton = new FlxButton(100, 400, "Join Server", clickClient);
@@ -25,10 +26,10 @@ class ConnectionState extends FlxState {
     }
     function clickServer():Void {
         Main.instance.startServer(Std.parseInt(coolPortBox.text));
-        FlxG.switchState(new TitleState());
+        FlxG.switchState(new FreeplayState());
     }
     function clickClient():Void {
         Main.instance.startClient(coolIpBox.text, Std.parseInt(coolPortBox.text));
-        FlxG.switchState(new TitleState());
+        FlxG.switchState(new FreeplayState());
     }
 }
