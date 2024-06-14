@@ -188,6 +188,9 @@ class Main extends Sprite
 			max_connections: 1
 		  });
 		  server.start();
+		  if (ConnectionState.instance != null) {
+			ConnectionState.instance.setText("Server started!\n Please wait for\n Client to connect!", 500, 100);
+		  }
 		  server.addEventListener(NetworkEvent.CONNECTED, function(e: NetworkEvent) {
 			var connected_client = e.client;
 			successfulConnect = true;
@@ -224,12 +227,19 @@ class Main extends Sprite
 		  });
 	}
 	public function initCalcScore() {
-		if (ScoreOverviewState.instance != null) {
+		if (ScoreOverviewState.instance != null && otherScoresArray != null && scoresArray != null) {
 			if (serverstate == "client") {
 				ScoreOverviewState.instance.calculateRankings(otherScoresArray[0], otherScoresArray[1], scoresArray[0], scoresArray[1]);
 			} else {
 				ScoreOverviewState.instance.calculateRankings(scoresArray[0], scoresArray[1], otherScoresArray[0], otherScoresArray[1]);
 			}
+		} else if (otherScoresArray == null || scoresArray == null) {
+			server = null;
+			client = null;
+			serverstate = "none";
+			FlxG.switchState(new ConnectionState());
+			trace("Caught null exception on a score array!");
+			ConnectionState.instance.setText("Caught null exception on a score array!", 500, 400);
 		}
 	}
 	public function sendServerMessage(messages:Dynamic) {
@@ -245,6 +255,9 @@ class Main extends Sprite
 			port: ports
 		  });
 		  client.start();
+		  if (ConnectionState.instance != null) {
+			ConnectionState.instance.setText("Client started!\n Please wait for\n Server to connect!\n If you wait for\nmore than 30 seconds,\n try again!", 500, 100);
+		  }
 		  client.addEventListener(NetworkEvent.MESSAGE_RECEIVED, function(e: NetworkEvent) {
 			trace(e.data.message); // Welcome to the server!
 			successfulConnect = true;

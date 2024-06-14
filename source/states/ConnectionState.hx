@@ -2,6 +2,7 @@ package states;
 import flixel.util.FlxTimer;
 import flixel.addons.ui.FlxInputText;
 import flixel.FlxState;
+import flixel.text.FlxText;
 import flixel.ui.FlxButton;
 import states.FreeplayState;
 import options.OptionsState;
@@ -11,8 +12,10 @@ class ConnectionState extends FlxState {
     var coolIpBox:FlxInputText;
     var coolPortBox:FlxInputText;
     var coolTimer:FlxTimer;
+    static public var instance:ConnectionState;
     override public function new() {
         super();
+        ConnectionState.instance = this;
         FlxG.mouse.enabled = true;
         FlxG.mouse.visible = true;
         FlxG.autoPause = false;
@@ -50,5 +53,9 @@ class ConnectionState extends FlxState {
                     coolTimer.cancel();
                 }
             }, 0);
+    }
+    public function setText(textVar:String = "there was text here\n but it failed to load!", xVar:Dynamic = 500, yVar:Dynamic = 200){
+        var tempText = new FlxText(xVar, yVar, 0, textVar, 16);
+        add(tempText);
     }
 }
