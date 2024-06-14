@@ -58,8 +58,8 @@ class ScoreOverviewState extends MusicBeatState
         } else if (p1acc <= p2acc) {
             accComparisontext = "Boyfriend beat Opponent's accuracy of " + p1acc + " \nwith an accuracy of " + p2acc + "!";
         }
-        var absolutep1 = p1acc * p1score;
-        var absolutep2 = p2acc * p2score;
+        var absolutep1 = (p1acc * 100) * (p1score / 10);
+        var absolutep2 = (p2acc * 100) * (p2score / 10);
         var winner = -1;
         var opponentWinsArray = new Array<Bool>();
         if (absolutep1 == absolutep2) {
