@@ -23,7 +23,7 @@ class ConnectionState extends FlxState {
         FlxG.mouse.enabled = true;
         FlxG.mouse.visible = true;
         FlxG.autoPause = false;
-        coolDeathToggle = new FlxUICheckBox(500, 500, new FlxSprite().makeGraphic(64, 64, FlxColor.WHITE), new FlxSprite().makeGraphic(32, 32, FlxColor.BLACK), "Allow Death?", 150, [null], function()
+        coolDeathToggle = new FlxUICheckBox(500, 500, new FlxSprite().makeGraphic(64, 64, FlxColor.WHITE), new FlxSprite().makeGraphic(32, 32, FlxColor.BLACK), "Allow Death?\nFull white square\nmeans yes.", 150, [null], function()
             {
                 if (Main.allowDeath) {
                     Main.allowDeath = false;
