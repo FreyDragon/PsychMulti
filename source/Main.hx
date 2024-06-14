@@ -218,7 +218,7 @@ class Main extends Sprite
 					PlayState.instance.popupOpponentScore(dharmann, e.data.message[1]);
 				case "playerScore":
 					otherScoresArray = [e.data.message[1], e.data.message[2]];
-					sendServerMessage(["playerScore", scoresArray]);
+					sendServerMessage(["playerScore", scoresArray[0], scoresArray[1]]);
 				case "BRO HES DEAD":
 					PlayState.instance.endSong();
 				default:
@@ -228,11 +228,7 @@ class Main extends Sprite
 	}
 	public function initCalcScore() {
 		if (ScoreOverviewState.instance != null && otherScoresArray != null && scoresArray != null) {
-			if (serverstate == "client") {
-				ScoreOverviewState.instance.calculateRankings(otherScoresArray[0], otherScoresArray[1], scoresArray[0], scoresArray[1]);
-			} else {
 				ScoreOverviewState.instance.calculateRankings(scoresArray[0], scoresArray[1], otherScoresArray[0], otherScoresArray[1]);
-			}
 		} else if (otherScoresArray == null || scoresArray == null) {
 			server = null;
 			client = null;

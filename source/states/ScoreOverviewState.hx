@@ -45,7 +45,7 @@ class ScoreOverviewState extends MusicBeatState
         } else if (p1score >= p2score) {
             scoreComparisontext = "Opponent beat Boyfriend's score of " + p2score + " \nwith a score of " + p1score + "!";
             scoreWinner = 1;
-        } else {
+        } else if (p1score <= p2score) {
             scoreComparisontext = "Boyfriend beat Opponent's score of " + p1score + " \nwith a score of " + p2score + "!";
             scoreWinner = 2;
         }
@@ -55,7 +55,7 @@ class ScoreOverviewState extends MusicBeatState
         } else if (p1acc >= p2acc) {
             accComparisontext = "Opponent beat Boyfriend's accuracy of " + p2acc + " \nwith an accuracy of " + p1acc + "!";
             accWinner = 2;
-        } else {
+        } else if (p1acc <= p2acc) {
             accComparisontext = "Boyfriend beat Opponent's accuracy of " + p1acc + " \nwith an accuracy of " + p2acc + "!";
         }
         var absolutep1 = p1acc * p1score;
