@@ -48,6 +48,7 @@ class Main extends Sprite
 	static public var instance:Main;
 	var server:Dynamic;
 	var client:Dynamic;
+	public var successfulConnect = false;
 	public var scoresArray:Dynamic;
 	public var otherScoresArray:Dynamic;
 	public var freyVersion:Dynamic;
@@ -77,7 +78,7 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-		freyVersion = "0.0.5.2";
+		freyVersion = "0.1.0";
 		Main.instance = this;
 		// Credits to MAJigsaw77 (he's the og author for this code)
 		#if android
@@ -189,6 +190,7 @@ class Main extends Sprite
 		  server.start();
 		  server.addEventListener(NetworkEvent.CONNECTED, function(e: NetworkEvent) {
 			var connected_client = e.client;
+			successfulConnect = true;
 			connected_client.send({ message: ['version', freyVersion], verb: 'test' });
 		  });
 		  server.addEventListener(NetworkEvent.MESSAGE_RECEIVED, function(e: NetworkEvent) {
@@ -245,6 +247,7 @@ class Main extends Sprite
 		  client.start();
 		  client.addEventListener(NetworkEvent.MESSAGE_RECEIVED, function(e: NetworkEvent) {
 			trace(e.data.message); // Welcome to the server!
+			successfulConnect = true;
 			switch(e.data.message[0]) {
 				case "ready":
 					coolTimer = new FlxTimer().start(0.005, function(tmr:FlxTimer)

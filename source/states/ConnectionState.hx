@@ -1,5 +1,5 @@
 package states;
-
+import flixel.util.FlxTimer;
 import flixel.addons.ui.FlxInputText;
 import flixel.FlxState;
 import flixel.ui.FlxButton;
@@ -10,7 +10,7 @@ class ConnectionState extends FlxState {
     var coolClientButton:FlxButton;
     var coolIpBox:FlxInputText;
     var coolPortBox:FlxInputText;
-
+    var coolTimer:FlxTimer;
     override public function new() {
         super();
         FlxG.mouse.enabled = true;
@@ -29,7 +29,13 @@ class ConnectionState extends FlxState {
     }
     function clickServer():Void {
         Main.instance.startServer(Std.parseInt(coolPortBox.text));
-        FlxG.switchState(new FreeplayState());
+        coolTimer = new FlxTimer().start(0.005, function(tmr:FlxTimer)
+            {
+                if (Main.instance.successfulConnect) {
+                    FlxG.switchState(new FreeplayState());
+                    coolTimer.cancel();
+                }
+            }, 0);
     }
     function clickSettings():Void {
     MusicBeatState.switchState(new OptionsState());
@@ -37,6 +43,12 @@ class ConnectionState extends FlxState {
     }
     function clickClient():Void {
         Main.instance.startClient(coolIpBox.text, Std.parseInt(coolPortBox.text));
-        FlxG.switchState(new FreeplayState());
+        coolTimer = new FlxTimer().start(0.005, function(tmr:FlxTimer)
+            {
+                if (Main.instance.successfulConnect) {
+                    FlxG.switchState(new FreeplayState());
+                    coolTimer.cancel();
+                }
+            }, 0);
     }
 }

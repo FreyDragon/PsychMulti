@@ -81,9 +81,9 @@ class ScoreOverviewState extends MusicBeatState
                 overallComparisontext = "Opponent wins! \nOpponent had a higher score of " + p1score + "\nbut a lower accuracy of " + p1acc * 100 + "%!";
             case [false, false, false]:
                 overallComparisontext = "Boyfriend wins in a landslide! \nBoyfriend had a higher accuracy of " + p2acc * 100 + "%\nAND a higher score of " + p2score + "!";
-            case [false, true, false]:
-                overallComparisontext = "Boyfriend wins! \nBoyfriend had a higher accuracy of " + p2acc * 100 + "%\nbut a lower score of " + p2score + "!";
             case [false, false, true]:
+                overallComparisontext = "Boyfriend wins! \nBoyfriend had a higher accuracy of " + p2acc * 100 + "%\nbut a lower score of " + p2score + "!";
+            case [false, true, false]:
                 overallComparisontext = "Boyfriend wins! \nBoyfriend had a higher score of " + p2score + "\nbut a lower accuracy of " + p2acc * 100 + "%!";
             default:
                 overallComparisontext = "Something seems to be wrong, \nOR there is a tie\nDid opponent win? \nDid opponent score more?" + opponentWinsArray[2] + "\ndid opponent have more accuracy?" + opponentWinsArray[1] + "\nIF THERE SHOULD BE A WINNER, \nreport this to the mod's \n issue tracker!!!!! \n https://github.com/FreyDragon/PsychMulti/issues";
@@ -95,7 +95,7 @@ class ScoreOverviewState extends MusicBeatState
         scoreComparison = new FlxText(100, 400, 0, scoreComparisontext, 30);
         add(scoreComparison);
         } else {
-            overallComparison = new FlxText(100, 100, 0, "Score cannot be compared\nNull object almost crashed game!", 30);
+            overallComparison = new FlxText(100, 100, 0, "Score cannot be compared\nNull object almost crashed game!\nReport this to the mod's \n issue tracker!!!!! \n https://github.com/FreyDragon/PsychMulti/issues", 30);
             add(overallComparison);
         }
     }
