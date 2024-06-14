@@ -52,10 +52,9 @@ class FreeplayState extends MusicBeatState
 	{
 		//Paths.clearStoredMemory();
 		//Paths.clearUnusedMemory();
-		
+		if (Main.instance.serverstate == 'server') {
 		persistentUpdate = true;
 		PlayState.isStoryMode = false;
-		if (Main.instance.serverstate == 'server') {
 		WeekData.reloadWeekFiles(false);
 
 		#if DISCORD_ALLOWED
@@ -422,8 +421,9 @@ class FreeplayState extends MusicBeatState
 			openSubState(new ResetScoreSubState(songs[curSelected].songName, curDifficulty, songs[curSelected].songCharacter));
 			FlxG.sound.play(Paths.sound('scrollMenu'));
 		}
-		}
+		
 		updateTexts(elapsed);
+		}
 		super.update(elapsed);
 	}
 
@@ -465,6 +465,7 @@ class FreeplayState extends MusicBeatState
 
 	function changeSelection(change:Int = 0, playSound:Bool = true)
 	{
+		if (Main.instance.serverstate == "server") {
 		if (player.playingMusic)
 			return;
 
@@ -528,6 +529,7 @@ class FreeplayState extends MusicBeatState
 
 		changeDiff();
 		_updateSongLastDifficulty();
+		}
 	}
 
 	inline private function _updateSongLastDifficulty()
