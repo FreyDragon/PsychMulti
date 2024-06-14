@@ -3,15 +3,19 @@ import flixel.util.FlxTimer;
 import flixel.addons.ui.FlxInputText;
 import flixel.FlxState;
 import flixel.text.FlxText;
+import flixel.FlxSprite;
 import flixel.ui.FlxButton;
 import states.FreeplayState;
 import options.OptionsState;
+import flixel.addons.ui.FlxUICheckBox;
+import flixel.util.FlxColor;
 class ConnectionState extends FlxState {
     var coolServerButton:FlxButton;
     var coolClientButton:FlxButton;
     var coolIpBox:FlxInputText;
     var coolPortBox:FlxInputText;
     var coolTimer:FlxTimer;
+    var coolDeathToggle:FlxUICheckBox;
     static public var instance:ConnectionState;
     override public function new() {
         super();
@@ -19,6 +23,10 @@ class ConnectionState extends FlxState {
         FlxG.mouse.enabled = true;
         FlxG.mouse.visible = true;
         FlxG.autoPause = false;
+        coolDeathToggle = new FlxUICheckBox(100, 500, new FlxSprite().makeGraphic(64, 64, FlxColor.WHITE), new FlxSprite().makeGraphic(32, 32, FlxColor.BLACK), "Allow Death?", 150, [null], function()
+            {
+                Main.allowDeath = false;
+            });
         coolServerButton = new FlxButton(100, 300, "Start Server", clickServer);
         var coolSettingsButton = new FlxButton(500, 300, "Change Settings", clickSettings);
         coolClientButton = new FlxButton(100, 400, "Join Server", clickClient);

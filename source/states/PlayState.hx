@@ -1755,8 +1755,9 @@ class PlayState extends MusicBeatState
 		{
 		
 		}
+		if (Main.allowDeath) {
 		doDeathCheck();
-
+		}
 		if (unspawnNotes[0] != null)
 		{
 			var time:Float = spawnTime * playbackRate;
@@ -3119,7 +3120,9 @@ class PlayState extends MusicBeatState
 		{
 			vocals.volume = 0;
 			opponentVocals.volume = 0;
-			doDeathCheck(true);
+			if (Main.allowDeath) {
+				doDeathCheck(true);
+			}
 		}
 
 		var lastCombo:Int = combo;

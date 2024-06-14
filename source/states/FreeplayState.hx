@@ -55,6 +55,7 @@ class FreeplayState extends MusicBeatState
 		
 		persistentUpdate = true;
 		PlayState.isStoryMode = false;
+		if (Main.instance.serverstate == 'server') {
 		WeekData.reloadWeekFiles(false);
 
 		#if DISCORD_ALLOWED
@@ -173,6 +174,7 @@ class FreeplayState extends MusicBeatState
 		
 		changeSelection();
 		updateTexts();
+		}
 		super.create();
 	}
 

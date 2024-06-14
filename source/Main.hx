@@ -49,6 +49,7 @@ class Main extends Sprite
 	var server:Dynamic;
 	var client:Dynamic;
 	public var successfulConnect = false;
+	static public var allowDeath = true;
 	public var scoresArray:Dynamic;
 	public var otherScoresArray:Dynamic;
 	public var freyVersion:Dynamic;
@@ -78,7 +79,7 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-		freyVersion = "0.1.0";
+		freyVersion = "0.1.1";
 		Main.instance = this;
 		// Credits to MAJigsaw77 (he's the og author for this code)
 		#if android
@@ -194,7 +195,11 @@ class Main extends Sprite
 		  server.addEventListener(NetworkEvent.CONNECTED, function(e: NetworkEvent) {
 			var connected_client = e.client;
 			successfulConnect = true;
-			connected_client.send({ message: ['version', freyVersion], verb: 'test' });
+			var homo = "true";
+			if (!Main.allowDeath) {
+				homo = "false";
+			}
+			connected_client.send({ message: ['version', freyVersion, homo], verb: 'test' });
 		  });
 		  server.addEventListener(NetworkEvent.MESSAGE_RECEIVED, function(e: NetworkEvent) {
 			trace(e.data.message); // Welcome to the server!
@@ -281,6 +286,7 @@ class Main extends Sprite
 						newFreyVersion = e.data.message[1];
 						FlxG.switchState(new OutdatedState());
 					}
+					Main.allowDeath = e.data.message[2];
 				case "sync":
 				 PlayState.instance.forceTime(e.data.message[1]);
 				case "BRO HES DEAD":
