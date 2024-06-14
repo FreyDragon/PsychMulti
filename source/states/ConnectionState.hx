@@ -23,9 +23,13 @@ class ConnectionState extends FlxState {
         FlxG.mouse.enabled = true;
         FlxG.mouse.visible = true;
         FlxG.autoPause = false;
-        coolDeathToggle = new FlxUICheckBox(100, 500, new FlxSprite().makeGraphic(64, 64, FlxColor.WHITE), new FlxSprite().makeGraphic(32, 32, FlxColor.BLACK), "Allow Death?", 150, [null], function()
+        coolDeathToggle = new FlxUICheckBox(500, 500, new FlxSprite().makeGraphic(64, 64, FlxColor.WHITE), new FlxSprite().makeGraphic(32, 32, FlxColor.BLACK), "Allow Death?", 150, [null], function()
             {
-                Main.allowDeath = false;
+                if (Main.allowDeath) {
+                    Main.allowDeath = false;
+                } else {
+                    Main.allowDeath = true;
+                }
             });
         coolServerButton = new FlxButton(100, 300, "Start Server", clickServer);
         var coolSettingsButton = new FlxButton(500, 300, "Change Settings", clickSettings);
@@ -37,6 +41,7 @@ class ConnectionState extends FlxState {
         add(coolSettingsButton);
         add(coolIpBox);
         add(coolPortBox);
+        add(coolDeathToggle);
     }
     function clickServer():Void {
         Main.instance.startServer(Std.parseInt(coolPortBox.text));
