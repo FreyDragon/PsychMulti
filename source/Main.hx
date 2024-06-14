@@ -233,6 +233,7 @@ class Main extends Sprite
 			server = null;
 			client = null;
 			serverstate = "none";
+			successfulConnect = false;
 			FlxG.switchState(new ConnectionState());
 			trace("Caught null exception on a score array!");
 			ConnectionState.instance.setText("Caught null exception on a score array!", 500, 400);
