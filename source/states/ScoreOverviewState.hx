@@ -51,12 +51,12 @@ class ScoreOverviewState extends MusicBeatState
         }
         if (p1acc == p2acc) {
             accComparisontext = "Opponent tied with Boyfriend for an accuracy of " + p1acc * 100 + "%!";
-            accWinner = 1;
         } else if (p1acc >= p2acc) {
             accComparisontext = "Opponent beat Boyfriend's accuracy of " + p2acc * 100 + "%\nwith an accuracy of " + p1acc * 100 + "%!";
-            accWinner = 2;
+            accWinner = 1;
         } else if (p1acc <= p2acc) {
             accComparisontext = "Boyfriend beat Opponent's accuracy of " + p1acc * 100 + "%\nwith an accuracy of " + p2acc * 100 + "%!";
+            accWinner = 2;
         }
         var absolutep1 = (p1acc * 100) * (p1score / 10);
         var absolutep2 = (p2acc * 100) * (p2score / 10);

@@ -79,7 +79,7 @@ class Main extends Sprite
 	public function new()
 	{
 		super();
-		freyVersion = "0.1.1";
+		freyVersion = "0.1.2";
 		Main.instance = this;
 		// Credits to MAJigsaw77 (he's the og author for this code)
 		#if android
@@ -233,7 +233,9 @@ class Main extends Sprite
 	}
 	public function initCalcScore() {
 		if (ScoreOverviewState.instance != null && otherScoresArray != null && scoresArray != null) {
-				ScoreOverviewState.instance.calculateRankings(scoresArray[0], scoresArray[1], otherScoresArray[0], otherScoresArray[1]);
+			ScoreOverviewState.instance.calculateRankings(scoresArray[0], scoresArray[1], otherScoresArray[0], otherScoresArray[1]);
+			scoresArray = null;
+			otherScoresArray = null;
 		} else if (otherScoresArray == null || scoresArray == null) {
 			server = null;
 			client = null;
