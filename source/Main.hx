@@ -213,17 +213,19 @@ class Main extends Sprite
 							}
 						}, 0);
 				case "setHealth":
-					if (PlayState.instance.health >= e.data.message[1] + 0.05) {
-						PlayState.instance.health -= e.data.message[1];
-					}
+						PlayState.instance.health = 2.05 - e.data.message[1];
 				case "playAnim":
 					PlayState.instance.opponentNoteTrigger(e.data.message[1]);
 				case "getRating":
 					var dharmann:Rating = e.data.message[2];
 					PlayState.instance.popupOpponentScore(dharmann, e.data.message[1]);
 				case "playerScore":
-					otherScoresArray = [e.data.message[1], e.data.message[2]];
-					sendServerMessage(["playerScore", scoresArray[0], scoresArray[1]]);
+					otherScoresArray = null;
+					if (e.data.message[1] != null && e.data.message[2] != null) {
+						otherScoresArray = [e.data.message[1], e.data.message[2]];
+						if (scoresArray[0] != null)
+							sendServerMessage(["playerScore", scoresArray[0], scoresArray[1]]);
+					}
 				case "BRO HES DEAD":
 					PlayState.instance.endSong();
 				default:
@@ -275,9 +277,7 @@ class Main extends Sprite
 							}
 						}, 0);
 				case "setHealth":
-					if (PlayState.instance.health >= e.data.message[1] + 0.05) {
-						PlayState.instance.health -= e.data.message[1];
-					}
+						PlayState.instance.health = 2.05 - e.data.message[1];
 				case "playAnim":
 					PlayState.instance.opponentNoteTrigger(e.data.message[1]);
 				case "playerScore":

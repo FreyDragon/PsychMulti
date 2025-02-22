@@ -50,12 +50,12 @@ class ScoreOverviewState extends MusicBeatState
             scoreWinner = 2;
         }
         if (p1acc == p2acc) {
-            accComparisontext = "Opponent tied with Boyfriend for an accuracy of " + p1acc * 100 + "%!";
+            accComparisontext = "Opponent tied with Boyfriend for an accuracy of " + (Math.round(p1acc * 10000) / 10000 ) * 100 + "%!";
         } else if (p1acc >= p2acc) {
-            accComparisontext = "Opponent beat Boyfriend's accuracy of " + p2acc * 100 + "%\nwith an accuracy of " + p1acc * 100 + "%!";
+            accComparisontext = "Opponent beat Boyfriend's accuracy of " + (Math.round(p2acc * 10000) / 10000 ) * 100 + "%\nwith an accuracy of " + (Math.round(p1acc * 10000) / 10000 ) * 100 + "%!";
             accWinner = 1;
         } else if (p1acc <= p2acc) {
-            accComparisontext = "Boyfriend beat Opponent's accuracy of " + p1acc * 100 + "%\nwith an accuracy of " + p2acc * 100 + "%!";
+            accComparisontext = "Boyfriend beat Opponent's accuracy of " + (Math.round(p1acc * 10000) / 10000 ) * 100 + "%\nwith an accuracy of " + (Math.round(p2acc * 10000) / 10000 ) * 100 + "%!";
             accWinner = 2;
         }
         var absolutep1 = (p1acc * 100) * (p1score / 10);
@@ -74,17 +74,17 @@ class ScoreOverviewState extends MusicBeatState
         opponentWinsArray.push(scoreWinner == 1);
         switch(opponentWinsArray) {
             case [true, true, true]:
-                overallComparisontext = "Opponent wins in a landslide! \nOpponent had a higher accuracy of " + p1acc * 100 + "%\nAND a higher score of " + p1score + "!";
+                overallComparisontext = "Opponent wins in a landslide! \nOpponent had a higher accuracy of " + (Math.round(p1acc * 10000) / 10000 ) * 100 + "%\nAND a higher score of " + p1score + "!";
             case [true, true, false]:
-                overallComparisontext = "Opponent wins! \nOpponent had a higher accuracy of " + p1acc * 100 + "%\nbut a lower score of " + p1score + "!";
+                overallComparisontext = "Opponent wins! \nOpponent had a higher accuracy of " + (Math.round(p1acc * 10000) / 10000 ) * 100 + "%\nbut a lower score of " + p1score + "!";
             case [true, false, true]:
-                overallComparisontext = "Opponent wins! \nOpponent had a higher score of " + p1score + "\nbut a lower accuracy of " + p1acc * 100 + "%!";
+                overallComparisontext = "Opponent wins! \nOpponent had a higher score of " + p1score + "\nbut a lower accuracy of " + (Math.round(p1acc * 10000) / 10000 ) * 100 + "%!";
             case [false, false, false]:
-                overallComparisontext = "Boyfriend wins in a landslide! \nBoyfriend had a higher accuracy of " + p2acc * 100 + "%\nAND a higher score of " + p2score + "!";
+                overallComparisontext = "Boyfriend wins in a landslide! \nBoyfriend had a higher accuracy of " + (Math.round(p2acc * 10000) / 10000 ) * 100 + "%\nAND a higher score of " + p2score + "!";
             case [false, false, true]:
-                overallComparisontext = "Boyfriend wins! \nBoyfriend had a higher accuracy of " + p2acc * 100 + "%\nbut a lower score of " + p2score + "!";
+                overallComparisontext = "Boyfriend wins! \nBoyfriend had a higher accuracy of " + (Math.round(p2acc * 10000) / 10000 ) * 100 + "%\nbut a lower score of " + p2score + "!";
             case [false, true, false]:
-                overallComparisontext = "Boyfriend wins! \nBoyfriend had a higher score of " + p2score + "\nbut a lower accuracy of " + p2acc * 100 + "%!";
+                overallComparisontext = "Boyfriend wins! \nBoyfriend had a higher score of " + p2score + "\nbut a lower accuracy of " + (Math.round(p2acc * 10000) / 10000 ) * 100 + "%!";
             default:
                 overallComparisontext = "Something seems to be wrong, \nOR there is a tie\nDid opponent win? \nDid opponent score more?" + opponentWinsArray[2] + "\ndid opponent have more accuracy?" + opponentWinsArray[1] + "\nIF THERE SHOULD BE A WINNER, \nreport this to the mod's \n issue tracker!!!!! \n https://github.com/FreyDragon/PsychMulti/issues";
         }

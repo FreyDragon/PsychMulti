@@ -3138,9 +3138,9 @@ class PlayState extends MusicBeatState
 
 		health -= subtract;
 		if (Main.instance.serverstate == "client") {
-			Main.instance.sendClientMessage(["setHealth", 0 - subtract]);
-		} else if (Main.instance.serverstate == "client") {
-			Main.instance.sendServerMessage(["setHealth", 0 - subtract]);
+			Main.instance.sendClientMessage(["setHealth", health]);
+		} else {
+			Main.instance.sendServerMessage(["setHealth", health]);
 		}
 		if(!practiceMode) songScore -= 10;
 		if(!endingSong) songMisses++;
@@ -3352,9 +3352,9 @@ class PlayState extends MusicBeatState
 		if (guitarHeroSustains && note.isSustainNote) gainHealth = false;
 		if (gainHealth) health += note.hitHealth * healthGain;
 		if (Main.instance.serverstate == "client") {
-			Main.instance.sendClientMessage(["setHealth", note.hitHealth * healthGain]);
+			Main.instance.sendClientMessage(["setHealth", health]);
 		} else if (Main.instance.serverstate == "server") {
-			Main.instance.sendServerMessage(["setHealth", note.hitHealth * healthGain]);
+			Main.instance.sendServerMessage(["setHealth", health]);
 		}
 		var result:Dynamic = callOnLuas('goodNoteHit', [notes.members.indexOf(note), leData, leType, isSus]);
 		if(result != LuaUtils.Function_Stop && result != LuaUtils.Function_StopHScript && result != LuaUtils.Function_StopAll) callOnHScript('goodNoteHit', [note]);
