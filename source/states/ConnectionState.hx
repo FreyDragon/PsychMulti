@@ -1,4 +1,5 @@
 package states;
+import objects.menus.ClickableSpriteButton;
 import flixel.util.FlxTimer;
 import flixel.addons.ui.FlxInputText;
 import flixel.FlxState;
@@ -10,12 +11,13 @@ import options.OptionsState;
 import flixel.addons.ui.FlxUICheckBox;
 import flixel.util.FlxColor;
 class ConnectionState extends FlxState {
-    var coolServerButton:FlxButton;
-    var coolClientButton:FlxButton;
     var coolIpBox:FlxInputText;
     var coolPortBox:FlxInputText;
     var coolTimer:FlxTimer;
     var coolDeathToggle:FlxUICheckBox;
+    var settingsButton:ClickableSpriteButton;
+    var serverButton:ClickableSpriteButton;
+    var clientButton:ClickableSpriteButton;
     static public var instance:ConnectionState;
     override public function new() {
         super();
@@ -31,17 +33,30 @@ class ConnectionState extends FlxState {
                     Main.allowDeath = true;
                 }
             });
-        coolServerButton = new FlxButton(100, 300, "Start Server", clickServer);
-        var coolSettingsButton = new FlxButton(500, 300, "Change Settings", clickSettings);
-        coolClientButton = new FlxButton(100, 400, "Join Server", clickClient);
-        coolIpBox = new FlxInputText(100, 500, 200, "Server IP");
-        coolPortBox = new FlxInputText(100, 600, 100, "Port");
-        add(coolServerButton);
-        add(coolClientButton);
-        add(coolSettingsButton);
+        
+        coolIpBox = new FlxInputText(500, 250, 500, "Server IP", 30);
+        coolPortBox = new FlxInputText(500, 125, 500, "Port", 30);
         add(coolIpBox);
         add(coolPortBox);
         add(coolDeathToggle);
+        settingsButton = new ClickableSpriteButton("Settings");
+        serverButton = new ClickableSpriteButton("Host Game");
+        clientButton = new ClickableSpriteButton("Join Game");
+        settingsButton.setPositions(25, 25);
+        serverButton.setPositions(25, 125);
+        clientButton.setPositions(25, 225);
+        add(settingsButton);
+        add(serverButton);
+        add(clientButton);
+    }
+    override function update(elapsed:Float) {
+        if (settingsButton.isClicked)
+            clickSettings();
+        if (serverButton.isClicked)
+            clickServer();
+        if (clientButton.isClicked)
+            clickClient();
+        super.update(elapsed);
     }
     function clickServer():Void {
         Main.instance.startServer(Std.parseInt(coolPortBox.text));
@@ -67,7 +82,7 @@ class ConnectionState extends FlxState {
                 }
             }, 0);
     }
-    public function setText(textVar:String = "there was text here\n but it failed to load!", xVar:Dynamic = 500, yVar:Dynamic = 200){
+    public function setText(textVar:String = "there was text here\n but it failed to load!", xVar:Dynamic = 500, yVar:Dynamic = 25) {
         var tempText = new FlxText(xVar, yVar, 0, textVar, 16);
         add(tempText);
     }

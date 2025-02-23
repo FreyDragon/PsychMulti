@@ -190,7 +190,7 @@ class Main extends Sprite
 		  });
 		  server.start();
 		  if (ConnectionState.instance != null) {
-			ConnectionState.instance.setText("Server started!\n Please wait for\n Client to connect!", 500, 100);
+			ConnectionState.instance.setText("Server started!\n Please wait for\n Client to connect!", 500, 25);
 		  }
 		  server.addEventListener(NetworkEvent.CONNECTED, function(e: NetworkEvent) {
 			var connected_client = e.client;
@@ -245,7 +245,7 @@ class Main extends Sprite
 			successfulConnect = false;
 			FlxG.switchState(new ConnectionState());
 			trace("Caught null exception on a score array!");
-			ConnectionState.instance.setText("Caught null exception on a score array!", 500, 400);
+			ConnectionState.instance.setText("Caught null exception on a score array!", 500, 25);
 		}
 	}
 	public function sendServerMessage(messages:Dynamic) {
@@ -262,7 +262,7 @@ class Main extends Sprite
 		  });
 		  client.start();
 		  if (ConnectionState.instance != null) {
-			ConnectionState.instance.setText("Client started!\n Please wait for\n Server to connect!\n If you wait for\nmore than 30 seconds,\n try again!", 500, 100);
+			ConnectionState.instance.setText("Client started!\n Please wait for\n Server to connect!\n If you wait for\nmore than 30 seconds,\n try again!", 500, 25);
 		  }
 		  client.addEventListener(NetworkEvent.MESSAGE_RECEIVED, function(e: NetworkEvent) {
 			trace(e.data.message); // Welcome to the server!
